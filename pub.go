@@ -23,6 +23,8 @@ func (b *Broker) Pub(topic string, data []byte) error {
 	ch := bt.ch[bt.writeNext]
 	atomic.AddInt32(&bt.writeNext, 1)
 	atomic.CompareAndSwapInt32(&bt.writeNext, bt.len, 0)
+	// 从channel中获取数据，封装为方法，将消息顺序写入文件
+	// 记录文件中数据追加的行数，对文件数据不删除；
 	ch <- data
 	return nil
 }
